@@ -19,7 +19,8 @@ namespace MobileApplication.Views
             menuItems = new List<HomeMenuItem>
             {
                 new HomeMenuItem {Id = MenuItemType.Browse, Title="Browse" },
-                new HomeMenuItem {Id = MenuItemType.About, Title="About" }
+                new HomeMenuItem {Id = MenuItemType.About, Title="About" },
+                new HomeMenuItem {Id = MenuItemType.BarcodeScanner, Title="BarcodeScanner" }
             };
 
             ListViewMenu.ItemsSource = menuItems;

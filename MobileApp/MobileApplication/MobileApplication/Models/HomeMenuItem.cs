@@ -7,7 +7,8 @@ namespace MobileApplication.Models
     public enum MenuItemType
     {
         Browse,
-        About
+        About,
+        BarcodeScanner
     }
     public class HomeMenuItem
     {

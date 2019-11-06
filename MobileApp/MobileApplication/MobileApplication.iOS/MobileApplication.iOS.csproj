@@ -133,11 +133,17 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms" Version="3.4.0.1008975" />
+    <PackageReference Include="ZXing.Net.Mobile.Forms">
+      <Version>2.4.1</Version>
+    </PackageReference>
+    <PackageReference Include="ZXing.Net.Mobile">
+      <Version>2.4.1</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\MobileApplication\MobileApplication.csproj">
-      <Project>{8C417353-9CD8-42D2-8546-181BA90A3D7F}</Project>
+      <Project>{A1DA1100-FBA9-4486-8FF4-9C7D8BBB9EF5}</Project>
       <Name>MobileApplication</Name>
     </ProjectReference>
   </ItemGroup>

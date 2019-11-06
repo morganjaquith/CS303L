@@ -32,6 +32,9 @@ namespace MobileApplication.Views
                     case (int)MenuItemType.About:
                         MenuPages.Add(id, new NavigationPage(new AboutPage()));
                         break;
+                    case (int)MenuItemType.BarcodeScanner:
+                        MenuPages.Add(id, new NavigationPage(new BarcodeScanner()));
+                        break;
                 }
             }
 
