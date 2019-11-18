@@ -19,8 +19,11 @@ namespace MobileApplication.Views
 
         void SignIn(object sender, EventArgs e)
         {
-            Application.Current.MainPage = new MainPage();
-
+            Database db = new Database();
+            if (db.UserLogin(username.Text, password.Text))
+            {
+                Application.Current.MainPage = new MainPage();
+            }
         }
 	}
 }

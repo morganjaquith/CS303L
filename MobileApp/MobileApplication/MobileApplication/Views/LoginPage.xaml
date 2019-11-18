@@ -5,9 +5,9 @@
     <ContentPage.Content>
         <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
             <Label Text="Username:" />
-            <Entry Placeholder="Username"/>
+            <Entry Placeholder="Username" x:Name="username"/>
             <Label Text="Password:"/>
-            <Entry Placeholder="Password" />
+            <Entry Placeholder="Password" x:Name="password"/>
             <Button Clicked="SignIn" Text="Login" />
         </StackLayout>
     </ContentPage.Content>

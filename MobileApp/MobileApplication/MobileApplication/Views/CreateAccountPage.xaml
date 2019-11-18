@@ -5,10 +5,10 @@
     <ContentPage.Content>
         <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
             <Label Text="Pick a username:" />
-            <Entry Placeholder="Username"/>
+            <Entry Placeholder="Username" x:Name="username"/>
             <Label Text="Create a password:" />
-            <Entry Placeholder="Password"/>
-            <Button Text="Create Account" />
+            <Entry Placeholder="Password" x:Name="password"/>
+            <Button Clicked="CreateAccount" Text="Create Account" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -54,6 +54,19 @@ namespace MobileApplication
             return false;
         }
 
+        public bool UserCheck(string username)
+        {
+            string url = dbUrl + "check";
+            string parameters = "{\"username\":\"" + username + "\"}";
+
+            if (request.Post(url, parameters) != null)
+            {
+                return true;
+            }
+            errorMessage = request.GetLastErrorMessage();
+            return false;
+        }
+
         public bool UserRegister(string username, string password)
         {
             string url = dbUrl + "register";

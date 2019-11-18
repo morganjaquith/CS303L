@@ -15,6 +15,16 @@ namespace MobileApplication.Views
 		public CreateAccountPage ()
 		{
 			InitializeComponent ();
+            
 		}
-	}
+
+        private void CreateAccount(object sender, EventArgs e)
+        {
+            Database db = new Database();
+            if (!db.UserLogin(username.Text, password.Text))
+            {
+                db.UserRegister(username.Text, password.Text);
+            }
+        }
+    }
 }
