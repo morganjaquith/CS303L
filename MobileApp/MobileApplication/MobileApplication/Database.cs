@@ -8,7 +8,8 @@ namespace MobileApplication
     class Database
     {
         public WebClient client;
-        public Product product;
+        public Products products;
+        private string apiKey = "it5z09owihva4agg6jwnms0w06qihl";
         private string dbUrl;
         private string errorMessage;
         private Request request;
@@ -25,7 +26,7 @@ namespace MobileApplication
             client.Headers[HttpRequestHeader.Authorization] = "Basic secret-6323";
             dbUrl = "https://f1m5kuz1va.execute-api.us-east-1.amazonaws.com/Stage/";
             request = new Request(client);
-            product = new Product(client);
+            products = new Products(client);
         }
 
         public bool UserLogin(string username, string password)
@@ -83,7 +84,7 @@ namespace MobileApplication
         public bool AddToUserInventory(string username, string upcCode)
         {
             string url = dbUrl + "adduserinv";
-            string productName = product.GetName(upcCode);
+            string productName = products.GetName(upcCode);
             string productDesc = "asdf";
             string parameters = "{\"username\":\"" + username + "\",\"scanid\":\"" + upcCode + "\",\"productname\":\"" + productName + "\",\"description\":\"" + productDesc + "\"}";
 
@@ -117,12 +118,12 @@ namespace MobileApplication
     }
 
     //Scrapes product info from source code
-    class Product
+    class Products
     {
         WebClient client;
         string lastError = "";
 
-        public Product(WebClient theClient)
+        public Products(WebClient theClient)
         {
             client = theClient;
         }
@@ -132,7 +133,7 @@ namespace MobileApplication
             string data;
             try
             {
-                data = GetProductData(upcCode);
+                data = ScrapeProductData(upcCode);
             }
             catch (Exception e)
             {
@@ -154,7 +155,7 @@ namespace MobileApplication
             return "";
         }
 
-        private string GetProductData(string upcCode)
+        private string ScrapeProductData(string upcCode)
         {
             byte[] raw = client.DownloadData("https://www.barcodespider.com/" + upcCode);
             string data = Encoding.UTF8.GetString(raw);
@@ -163,6 +164,16 @@ namespace MobileApplication
                 throw new Exception("Could not find a product with this UPC");
             }
             return data;
+        }
+
+        public string GetProductData(string upcCode)
+        {
+            byte[] raw = client.DownloadData("https://api.barcodelookup.com/v2/products?barcode=" + upcCode + "&formatted=y&key=it5z09owihva4agg6jwnms0w06qihl");
+            string data = Encoding.UTF8.GetString(raw);
+            SimpleJSON.JSONNode node = SimpleJSON.JSON.Parse(data);
+            string product = node["products"][0]["product_name"];
+
+            return product;
         }
 
         public string GetLastErrorMessage()
