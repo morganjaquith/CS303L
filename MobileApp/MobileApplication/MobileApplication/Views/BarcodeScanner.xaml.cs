@@ -25,9 +25,7 @@ namespace MobileApplication.Views
                     DisplayAlert("Scanned Barcode", result.Text, "OK");
                 });
             };
-
             await Navigation.PushModalAsync(scanPage);
-
         }
     }
 }

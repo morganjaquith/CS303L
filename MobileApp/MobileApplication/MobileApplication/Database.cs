@@ -9,7 +9,6 @@ namespace MobileApplication
     {
         public WebClient client;
         public Products products;
-        private string apiKey = "it5z09owihva4agg6jwnms0w06qihl";
         private string dbUrl;
         private string errorMessage;
         private Request request;
@@ -41,6 +40,19 @@ namespace MobileApplication
             return false;
         }
 
+        public bool UserRegister(string username, string password)
+        {
+            string url = dbUrl + "register";
+            string parameters = "{\"username\":\"" + username + "\",\"password\":\"" + password + "\",}";
+
+            if (request.Post(url, parameters) != null)
+            {
+                return true;
+            }
+            errorMessage = request.GetLastErrorMessage();
+            return false;
+        }
+
         //entering full name is optional
         public bool UserRegister(string username, string password, string fullname)
         {
@@ -55,23 +67,11 @@ namespace MobileApplication
             return false;
         }
 
+        //check if the user exists
         public bool UserCheck(string username)
         {
             string url = dbUrl + "check";
             string parameters = "{\"username\":\"" + username + "\"}";
-
-            if (request.Post(url, parameters) != null)
-            {
-                return true;
-            }
-            errorMessage = request.GetLastErrorMessage();
-            return false;
-        }
-
-        public bool UserRegister(string username, string password)
-        {
-            string url = dbUrl + "register";
-            string parameters = "{\"username\":\"" + username + "\",\"password\":\"" + password + "\",}";
 
             if (request.Post(url, parameters) != null)
             {

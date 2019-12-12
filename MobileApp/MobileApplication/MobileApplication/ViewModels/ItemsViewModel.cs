@@ -17,9 +17,11 @@ namespace MobileApplication.ViewModels
 
         public ItemsViewModel()
         {
-            Title = "Browse";
+            Title = "Inventory";
             Items = new ObservableCollection<Item>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
+            var listView = new ListView();
+            listView.ItemTemplate = new DataTemplate(typeof(InventoryItemCell));
 
             MessagingCenter.Subscribe<NewItemPage, Item>(this, "AddItem", async (obj, item) =>
             {
@@ -54,5 +56,37 @@ namespace MobileApplication.ViewModels
                 IsBusy = false;
             }
         }
+    }
+
+    internal class InventoryItemCell : ViewCell
+    {
+        // To register the LongTap/Tap-and-hold gestures once the item model has been assigned
+        protected override void OnBindingContextChanged()
+        {
+            base.OnBindingContextChanged();
+            RegisterGestures();
+        }
+
+        private void RegisterGestures()
+        {
+            var deleteOption = new MenuItem()
+            {
+                Text = "Delete",
+                Icon = "deleteIcon.png", //Android uses this, for example
+                CommandParameter = ((Item)BindingContext).Id
+            };
+            deleteOption.Clicked += deleteOption_Clicked;
+            ContextActions.Add(deleteOption);
+
+            //Repeat for the other 4 options
+
+        }
+        void deleteOption_Clicked(object sender, EventArgs e)
+        {
+            //To retrieve the parameters (if is more than one, you should use an object, which could be the same ItemModel 
+            int idToDelete = (int)((MenuItem)sender).CommandParameter;
+            //your delete actions
+        }
+        //Write the eventHandlers for the other 4 options
     }
 }

@@ -16,7 +16,8 @@ namespace MobileApplication.Views
         public ItemDetailPage(ItemDetailViewModel viewModel)
         {
             InitializeComponent();
-
+            ButtonEditItem.Clicked += ButtonEditItem_Clicked;
+            ButtonDeleteItem.Clicked += ButtonDeleteItem_Clicked;
             BindingContext = this.viewModel = viewModel;
         }
 
@@ -32,6 +33,16 @@ namespace MobileApplication.Views
 
             viewModel = new ItemDetailViewModel(item);
             BindingContext = viewModel;
+        }
+
+        private void ButtonEditItem_Clicked(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ButtonDeleteItem_Clicked(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }

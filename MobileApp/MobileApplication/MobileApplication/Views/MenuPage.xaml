@@ -4,6 +4,7 @@
              x:Class="MobileApplication.Views.MenuPage"
              Title="Menu">
     <StackLayout VerticalOptions="FillAndExpand">
+        <Label Text="" FontSize="Medium" x:Name="Greeting"/>
         <ListView x:Name="ListViewMenu"
                     HasUnevenRows="True">
             <ListView.ItemTemplate>

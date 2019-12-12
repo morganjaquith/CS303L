@@ -22,6 +22,8 @@ namespace MobileApplication.Views
             Database db = new Database();
             if (db.UserLogin(username.Text, password.Text))
             {
+                App.Username = username.Text;
+                App.Password = password.Text;
                 Application.Current.MainPage = new MainPage();
             }
         }

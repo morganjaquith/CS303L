@@ -8,11 +8,12 @@ namespace MobileApplication
 {
     public partial class App : Application
     {
+        public static string Username { get; set; }
+        public static string Password { get; set; }
 
         public App()
         {
             InitializeComponent();
-
 
             MainPage = new FrontPage();
         }

@@ -6,9 +6,10 @@ namespace MobileApplication.Models
 {
     public enum MenuItemType
     {
-        Browse,
+        Inventory,
         About,
-        BarcodeScanner
+        BarcodeScanner,
+        Logout
     }
     public class HomeMenuItem
     {

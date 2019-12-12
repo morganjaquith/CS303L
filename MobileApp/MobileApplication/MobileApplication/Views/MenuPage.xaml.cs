@@ -12,15 +12,17 @@ namespace MobileApplication.Views
     {
         MainPage RootPage { get => Application.Current.MainPage as MainPage; }
         List<HomeMenuItem> menuItems;
+        public static string Username = App.Username;
         public MenuPage()
         {
             InitializeComponent();
-
+            Greeting.Text = "Hi, " + App.Username + "!";
             menuItems = new List<HomeMenuItem>
             {
-                new HomeMenuItem {Id = MenuItemType.Browse, Title="Browse" },
+                new HomeMenuItem {Id = MenuItemType.Inventory, Title="Inventory" },
                 new HomeMenuItem {Id = MenuItemType.About, Title="About" },
-                new HomeMenuItem {Id = MenuItemType.BarcodeScanner, Title="BarcodeScanner" }
+                new HomeMenuItem {Id = MenuItemType.BarcodeScanner, Title="Barcode Scanner" },
+                new HomeMenuItem {Id = MenuItemType.Logout, Title="Log Out" },
             };
 
             ListViewMenu.ItemsSource = menuItems;

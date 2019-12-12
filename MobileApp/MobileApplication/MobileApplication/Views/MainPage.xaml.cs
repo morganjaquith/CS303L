@@ -14,10 +14,9 @@ namespace MobileApplication.Views
         public MainPage()
         {
             InitializeComponent();
-
             MasterBehavior = MasterBehavior.Popover;
 
-            MenuPages.Add((int)MenuItemType.Browse, (NavigationPage)Detail);
+            MenuPages.Add((int)MenuItemType.Inventory, (NavigationPage)Detail);
         }
 
         public async Task NavigateFromMenu(int id)
@@ -26,7 +25,7 @@ namespace MobileApplication.Views
             {
                 switch (id)
                 {
-                    case (int)MenuItemType.Browse:
+                    case (int)MenuItemType.Inventory:
                         MenuPages.Add(id, new NavigationPage(new ItemsPage()));
                         break;
                     case (int)MenuItemType.About:
@@ -34,6 +33,9 @@ namespace MobileApplication.Views
                         break;
                     case (int)MenuItemType.BarcodeScanner:
                         MenuPages.Add(id, new NavigationPage(new BarcodeScanner()));
+                        break;
+                    case (int)MenuItemType.Logout:
+                        MenuPages.Add(id, new NavigationPage(new LogOutPage()));
                         break;
                 }
             }

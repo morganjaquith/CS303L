@@ -8,5 +8,7 @@
         <Label Text="{Binding Item.Text}" FontSize="Small"/>
         <Label Text="Description:" FontSize="Medium" />
         <Label Text="{Binding Item.Description}" FontSize="Small"/>
+        <Button x:Name="ButtonEditItem" Text="Edit Item"/>
+        <Button x:Name="ButtonDeleteItem" Text="Delete Item" BackgroundColor="DimGray"/>
     </StackLayout>
 </ContentPage>

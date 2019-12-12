@@ -16,12 +16,12 @@ namespace MobileApplication.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ItemsPage : ContentPage
     {
+        public User CurrentUser { get; private set; }
         ItemsViewModel viewModel;
 
         public ItemsPage()
         {
             InitializeComponent();
-
             BindingContext = viewModel = new ItemsViewModel();
         }
 
