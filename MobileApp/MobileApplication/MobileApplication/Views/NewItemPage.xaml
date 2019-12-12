@@ -23,10 +23,14 @@
     
     <ContentPage.Content>
         <StackLayout Spacing="20" Padding="15">
-            <Label Text="Text" FontSize="Medium" />
-            <Entry Text="{Binding Item.Text}" FontSize="Small" />
+            <Label Text="UPC" FontSize="Medium" />
+            <Editor Text="{Binding Item.UPC}" FontSize="Small" Margin="0" />
+            <Label Text="Product Name" FontSize="Medium" />
+            <Entry Text="{Binding Item.ProductName}" FontSize="Small" />
             <Label Text="Description" FontSize="Medium" />
             <Editor Text="{Binding Item.Description}" FontSize="Small" Margin="0" />
+            <Label Text="Image URL" FontSize="Medium" />
+            <Editor Text="{Binding Item.ImageUrl}" FontSize="Small" Margin="0" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

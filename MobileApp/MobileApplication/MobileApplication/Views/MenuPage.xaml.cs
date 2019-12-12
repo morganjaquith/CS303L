@@ -12,11 +12,11 @@ namespace MobileApplication.Views
     {
         MainPage RootPage { get => Application.Current.MainPage as MainPage; }
         List<HomeMenuItem> menuItems;
-        public static string Username = App.Username;
+        public static string Username = App.Username.ToString();
         public MenuPage()
         {
             InitializeComponent();
-            Greeting.Text = "Hi, " + App.Username + "!";
+            Greeting.Text = "Hi, " + Username[0].ToString().ToUpper() + Username.Substring(1) + "!";
             menuItems = new List<HomeMenuItem>
             {
                 new HomeMenuItem {Id = MenuItemType.Inventory, Title="Inventory" },

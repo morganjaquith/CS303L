@@ -31,7 +31,7 @@ namespace MobileApplication
         public bool UserLogin(string username, string password)
         {
             string url = dbUrl + "login";
-            string parameters = "{\"username\":\"" + username + "\",\"password\":\"" + password + "\",}";
+            string parameters = "{\"username\":\"" + username.ToUpper() + "\",\"password\":\"" + password + "\",}";
             if (request.Post(url, parameters) != null)
             {
                 return true;
@@ -43,13 +43,15 @@ namespace MobileApplication
         public bool UserRegister(string username, string password)
         {
             string url = dbUrl + "register";
-            string parameters = "{\"username\":\"" + username + "\",\"password\":\"" + password + "\",}";
-
-            if (request.Post(url, parameters) != null)
+            string parameters = "{\"username\":\"" + username.ToUpper() + "\",\"password\":\"" + password + "\",}";
+            if (!UserLogin(username, password))
             {
-                return true;
+                if (request.Post(url, parameters) != null)
+                {
+                    return true;
+                }
+                errorMessage = request.GetLastErrorMessage();
             }
-            errorMessage = request.GetLastErrorMessage();
             return false;
         }
 
@@ -57,7 +59,7 @@ namespace MobileApplication
         public bool UserRegister(string username, string password, string fullname)
         {
             string url = dbUrl + "register";
-            string parameters = "{\"username\":\"" + username + "\",\"password\":\"" + password + "\",\"name\":\"" + fullname + "\"}";
+            string parameters = "{\"username\":\"" + username.ToUpper() + "\",\"password\":\"" + password + "\",\"name\":\"" + fullname + "\"}";
 
             if (request.Post(url, parameters) != null)
             {
@@ -84,8 +86,10 @@ namespace MobileApplication
         public bool AddToUserInventory(string username, string upcCode)
         {
             string url = dbUrl + "adduserinv";
-            string productName = products.GetName(upcCode);
-            string productDesc = "asdf";
+            string[] data = products.GetProductData(upcCode);
+            string productName = data[0];
+            string productDesc = data[1];
+            string productImage = data[2];
             string parameters = "{\"username\":\"" + username + "\",\"scanid\":\"" + upcCode + "\",\"productname\":\"" + productName + "\",\"description\":\"" + productDesc + "\"}";
 
             if (request.Post(url, parameters) != null)
@@ -97,18 +101,42 @@ namespace MobileApplication
         }
 
         //returns products in JSON format. Returns empty array upon error
-        public string GetUserInventory(string username)
+        public string[,] GetUserInventory(string username)
         {
             string url = dbUrl + "getuserinv";
             string parameters = "{\"username\":\"" + username + "\",}";
 
-            string inventory = request.Post(url, parameters);
-            if (inventory != null)
+            string jsonInventory = request.Post(url, parameters);
+            if (jsonInventory != null)
             {
+                SimpleJSON.JSONNode node = SimpleJSON.JSON.Parse(jsonInventory);
+                string[,] inventory = new string[node["inventory"].Count, 4];
+                for (int i = 0; i < node["inventory"].Count; i++)
+                {
+                    SimpleJSON.JSONNode item = SimpleJSON.JSON.Parse(node["inventory"][i]);
+                    inventory[i, 0] = item["scanid"];
+                    inventory[i, 1] = item["productname"];
+                    inventory[i, 2] = item["description"];
+                    inventory[i, 3] = products.GetProductData(inventory[i, 0])[3];
+                }
                 return inventory;
             }
             errorMessage = request.GetLastErrorMessage();
             return null;
+        }
+
+        public bool RemoveFromUserInventory(string username, string upcCode)
+        {
+            string url = dbUrl + "deleteuserinv";
+            string[] data = products.GetProductData(upcCode);
+            string parameters = "{\"username\":\"" + username + "\",\"scanid\":\"" + upcCode + "\",\"productname\":\"" + data[0] + "\",\"description\":\"" + data[1] + "\"}";
+
+            if (request.Post(url, parameters) != null)
+            {
+                return true;
+            }
+            errorMessage = request.GetLastErrorMessage();
+            return false;
         }
 
         public string GetErrorMessage()
@@ -123,17 +151,21 @@ namespace MobileApplication
         WebClient client;
         string lastError = "";
 
+        string name;
+        string desc;
+        string imagesource;
+
         public Products(WebClient theClient)
         {
             client = theClient;
         }
 
-        public string GetName(string upcCode)
+        public string GetProduct(string upcCode)
         {
-            string data;
+            string[] data;
             try
             {
-                data = ScrapeProductData(upcCode);
+                data = GetProductData(upcCode);
             }
             catch (Exception e)
             {
@@ -141,39 +173,24 @@ namespace MobileApplication
                 return null;
             }
 
-            string name;
-            string splitString = upcCode + " associated  with ";
-            int offset = data.LastIndexOf(splitString) + splitString.Length;
-
-            name = data.Substring(offset);
-            name = name.Substring(0, name.IndexOf("\">"));
+            name = data[0];
+            desc = data[1];
+            imagesource = data[2];
             return name;
         }
 
-        string GetDescription(string upcCode)
+        public string[] GetProductData(string upcCode)
         {
-            return "";
-        }
-
-        private string ScrapeProductData(string upcCode)
-        {
-            byte[] raw = client.DownloadData("https://www.barcodespider.com/" + upcCode);
-            string data = Encoding.UTF8.GetString(raw);
-            if (data.Contains("find upc number"))
-            {
-                throw new Exception("Could not find a product with this UPC");
-            }
-            return data;
-        }
-
-        public string GetProductData(string upcCode)
-        {
-            byte[] raw = client.DownloadData("https://api.barcodelookup.com/v2/products?barcode=" + upcCode + "&formatted=y&key=it5z09owihva4agg6jwnms0w06qihl");
+            string[] productData = new string[4];
+            byte[] raw = client.DownloadData("https://api.barcodelookup.com/v2/products?barcode=" + upcCode + "&formatted=y&key=jxk68km5g89sjjl9bh45xhiecoqjwq");
             string data = Encoding.UTF8.GetString(raw);
             SimpleJSON.JSONNode node = SimpleJSON.JSON.Parse(data);
-            string product = node["products"][0]["product_name"];
+            productData[0] = node["products"][0]["barcode_number"];
+            productData[1] = node["products"][0]["product_name"];
+            productData[2] = node["products"][0]["description"];
+            productData[3] = node["products"][0]["images"][0];
 
-            return product;
+            return productData;
         }
 
         public string GetLastErrorMessage()

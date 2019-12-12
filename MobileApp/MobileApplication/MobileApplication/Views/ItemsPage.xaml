@@ -13,7 +13,6 @@
             </ToolbarItem.Icon>
         </ToolbarItem>
     </ContentPage.ToolbarItems>
-
     <StackLayout>
         <ListView x:Name="ItemsListView"
                 ItemsSource="{Binding Items}"
@@ -31,11 +30,11 @@
                             <Label Text="{Binding Text}" 
                                 LineBreakMode="NoWrap" 
                                 Style="{DynamicResource ListItemTextStyle}" 
-                                FontSize="16" />
+                                FontSize="18" />
                             <Label Text="{Binding Description}" 
                                 LineBreakMode="NoWrap"
                                 Style="{DynamicResource ListItemDetailTextStyle}"
-                                FontSize="13" />
+                                FontSize="14" />
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>

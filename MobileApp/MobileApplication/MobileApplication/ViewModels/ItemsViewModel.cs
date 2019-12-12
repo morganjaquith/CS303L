@@ -13,12 +13,14 @@ namespace MobileApplication.ViewModels
     public class ItemsViewModel : BaseViewModel
     {
         public ObservableCollection<Item> Items { get; set; }
+        public ObservableCollection<string> DBItems { get; set; }
         public Command LoadItemsCommand { get; set; }
 
         public ItemsViewModel()
         {
             Title = "Inventory";
             Items = new ObservableCollection<Item>();
+            DBItems = new ObservableCollection<string>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
             var listView = new ListView();
             listView.ItemTemplate = new DataTemplate(typeof(InventoryItemCell));
@@ -35,16 +37,18 @@ namespace MobileApplication.ViewModels
         {
             if (IsBusy)
                 return;
-
             IsBusy = true;
+
+            Database db = new Database();
+            string[,] inventory = db.GetUserInventory(App.Username);
 
             try
             {
                 Items.Clear();
                 var items = await DataStore.GetItemsAsync(true);
-                foreach (var item in items)
+                for (int i = 0; i < inventory.Length; i++)
                 {
-                    Items.Add(item);
+                    Items.Add(new Item { UPC = inventory[i, 0], Text = inventory[i,1], Description = inventory[i,2], ImageUrl = inventory[i,3]});
                 }
             }
             catch (Exception ex)
@@ -73,7 +77,7 @@ namespace MobileApplication.ViewModels
             {
                 Text = "Delete",
                 Icon = "deleteIcon.png", //Android uses this, for example
-                CommandParameter = ((Item)BindingContext).Id
+                CommandParameter = ((Item)BindingContext).UPC
             };
             deleteOption.Clicked += deleteOption_Clicked;
             ContextActions.Add(deleteOption);

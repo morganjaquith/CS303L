@@ -10,13 +10,13 @@ using Xamarin.Forms.Xaml;
 using MobileApplication.Models;
 using MobileApplication.Views;
 using MobileApplication.ViewModels;
+using ZXing.Net.Mobile.Forms;
 
 namespace MobileApplication.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ItemsPage : ContentPage
     {
-        public User CurrentUser { get; private set; }
         ItemsViewModel viewModel;
 
         public ItemsPage()
@@ -41,6 +41,21 @@ namespace MobileApplication.Views
         {
             await Navigation.PushModalAsync(new NavigationPage(new NewItemPage()));
         }
+
+        //private async void ScanItem_Clicked(object sender, EventArgs e)
+        //{
+        //    ZXingScannerPage scanPage;
+        //    scanPage = new ZXingScannerPage();
+        //    scanPage.OnScanResult += (result) => {
+        //        scanPage.IsScanning = false;
+
+        //        Device.BeginInvokeOnMainThread(() => {
+        //            Navigation.PopModalAsync();
+        //            DisplayAlert("Scanned Barcode", result.Text, "OK");
+        //        });
+        //    };
+        //    await Navigation.PushModalAsync(scanPage);
+        //}
 
         protected override void OnAppearing()
         {

@@ -10,6 +10,7 @@ namespace MobileApplication
     {
         public static string Username { get; set; }
         public static string Password { get; set; }
+        public static string ScannedUPC { get; set; }
 
         public App()
         {
