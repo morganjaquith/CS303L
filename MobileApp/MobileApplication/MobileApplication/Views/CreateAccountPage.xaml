@@ -9,7 +9,7 @@
             <Label Text="Pick a username:" />
             <Entry Placeholder="Username" x:Name="username"/>
             <Label Text="Create a password:" />
-            <Entry Placeholder="Password" x:Name="password"/>
+            <Entry Placeholder="Password" x:Name="password" IsPassword="True"/>
             <Button Clicked="CreateAccount" Text="Create Account" />
             <Frame BackgroundColor="Transparent" BorderColor="Transparent" OutlineColor="Transparent"  HeightRequest="30"/>
             <Button Clicked="SignIn" Text="Log In Instead" />
