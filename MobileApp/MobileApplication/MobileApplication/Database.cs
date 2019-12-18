@@ -7,6 +7,7 @@ namespace MobileApplication
 {
     class Database
     {
+        public static string apiKey { get; private set; }
         public WebClient client;
         public Products products;
         private string dbUrl;
@@ -24,6 +25,7 @@ namespace MobileApplication
             client.Headers[HttpRequestHeader.ContentType] = "Content-Type:application/json";
             client.Headers[HttpRequestHeader.Authorization] = "Basic secret-6323";
             dbUrl = "https://f1m5kuz1va.execute-api.us-east-1.amazonaws.com/Stage/";
+            apiKey = "&formatted=y&key=qpzbr92sz831bfdyauu5f6ub1l450k";
             request = new Request(client);
             products = new Products(client);
         }
@@ -55,42 +57,10 @@ namespace MobileApplication
             return false;
         }
 
-        //entering full name is optional
-        public bool UserRegister(string username, string password, string fullname)
-        {
-            string url = dbUrl + "register";
-            string parameters = "{\"username\":\"" + username.ToUpper() + "\",\"password\":\"" + password + "\",\"name\":\"" + fullname + "\"}";
-
-            if (request.Post(url, parameters) != null)
-            {
-                return true;
-            }
-            errorMessage = request.GetLastErrorMessage();
-            return false;
-        }
-
-        //check if the user exists
-        public bool UserCheck(string username)
-        {
-            string url = dbUrl + "check";
-            string parameters = "{\"username\":\"" + username + "\"}";
-
-            if (request.Post(url, parameters) != null)
-            {
-                return true;
-            }
-            errorMessage = request.GetLastErrorMessage();
-            return false;
-        }
-
-        public bool AddToUserInventory(string username, string upcCode)
+        public bool AddToUserInventory(string username, string upcCode, string productName, string productDesc, string imageUrl, int quantity)
         {
             string url = dbUrl + "adduserinv";
-            string[] data = products.GetProductData(upcCode);
-            string productName = data[0];
-            string productDesc = data[1];
-            string productImage = data[2];
-            string parameters = "{\"username\":\"" + username + "\",\"scanid\":\"" + upcCode + "\",\"productname\":\"" + productName + "\",\"description\":\"" + productDesc + "\"}";
+            string parameters = "{\"username\":\"" + username.ToUpper() + "\",\"scanid\":\"" + upcCode + "\",\"productname\":\"" + productName + "\",\"description\":\"" + productDesc + "\",\"imageurl\":\"" + imageUrl + "\",\"quantity\":\"" + quantity + "\"}";
 
             if (request.Post(url, parameters) != null)
             {
@@ -98,26 +68,50 @@ namespace MobileApplication
             }
             errorMessage = request.GetLastErrorMessage();
             return false;
+        }
+
+        public string[] GetItemFromInventory(string username, string upcCode)
+        {
+            string url = dbUrl + "getuserinv";
+            string parameters = "{\"username\":\"" + username.ToUpper() + "\",}";
+
+            string jsonInventory = request.Post(url, parameters);
+            if (jsonInventory != null)
+            {
+                SimpleJSON.JSONNode node = SimpleJSON.JSON.Parse(jsonInventory);
+                string[,] inventory = new string[node["inventory"].Count, 5];
+                for (int i = 0; i < node["inventory"].Count; i++)
+                {
+                    SimpleJSON.JSONNode item = SimpleJSON.JSON.Parse(node["inventory"][i]);
+                    if (item["scanid"] == upcCode)
+                    {
+                        return new string[] { item["scanid"], item["productname"], item["description"], item["imageurl"], item["quantity"] };
+                    }
+                }
+            }
+            errorMessage = request.GetLastErrorMessage();
+            return null;
         }
 
         //returns products in JSON format. Returns empty array upon error
         public string[,] GetUserInventory(string username)
         {
             string url = dbUrl + "getuserinv";
-            string parameters = "{\"username\":\"" + username + "\",}";
+            string parameters = "{\"username\":\"" + username.ToUpper() + "\",}";
 
             string jsonInventory = request.Post(url, parameters);
             if (jsonInventory != null)
             {
                 SimpleJSON.JSONNode node = SimpleJSON.JSON.Parse(jsonInventory);
-                string[,] inventory = new string[node["inventory"].Count, 4];
+                string[,] inventory = new string[node["inventory"].Count, 5];
                 for (int i = 0; i < node["inventory"].Count; i++)
                 {
                     SimpleJSON.JSONNode item = SimpleJSON.JSON.Parse(node["inventory"][i]);
                     inventory[i, 0] = item["scanid"];
                     inventory[i, 1] = item["productname"];
                     inventory[i, 2] = item["description"];
-                    inventory[i, 3] = products.GetProductData(inventory[i, 0])[3];
+                    inventory[i, 3] = item["imageurl"];
+                    inventory[i, 4] = item["quantity"];
                 }
                 return inventory;
             }
@@ -128,8 +122,7 @@ namespace MobileApplication
         public bool RemoveFromUserInventory(string username, string upcCode)
         {
             string url = dbUrl + "deleteuserinv";
-            string[] data = products.GetProductData(upcCode);
-            string parameters = "{\"username\":\"" + username + "\",\"scanid\":\"" + upcCode + "\",\"productname\":\"" + data[0] + "\",\"description\":\"" + data[1] + "\"}";
+            string parameters = "{\"username\":\"" + username.ToUpper() + "\",\"scanid\":\"" + upcCode + "\"}";
 
             if (request.Post(url, parameters) != null)
             {
@@ -151,6 +144,7 @@ namespace MobileApplication
         WebClient client;
         string lastError = "";
 
+        string upc;
         string name;
         string desc;
         string imagesource;
@@ -173,22 +167,24 @@ namespace MobileApplication
                 return null;
             }
 
-            name = data[0];
-            desc = data[1];
-            imagesource = data[2];
+            upc = data[0];
+            name = data[1];
+            desc = data[2];
+            imagesource = data[3];
             return name;
         }
 
         public string[] GetProductData(string upcCode)
         {
-            string[] productData = new string[4];
-            byte[] raw = client.DownloadData("https://api.barcodelookup.com/v2/products?barcode=" + upcCode + "&formatted=y&key=jxk68km5g89sjjl9bh45xhiecoqjwq");
+            string[] productData = new string[5];
+            byte[] raw = client.DownloadData("https://api.barcodelookup.com/v2/products?barcode=" + upcCode + Database.apiKey);
             string data = Encoding.UTF8.GetString(raw);
             SimpleJSON.JSONNode node = SimpleJSON.JSON.Parse(data);
             productData[0] = node["products"][0]["barcode_number"];
             productData[1] = node["products"][0]["product_name"];
             productData[2] = node["products"][0]["description"];
             productData[3] = node["products"][0]["images"][0];
+            productData[4] = "1";
 
             return productData;
         }

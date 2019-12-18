@@ -37,25 +37,10 @@ namespace MobileApplication.Views
             ItemsListView.SelectedItem = null;
         }
 
-        async void AddItem_Clicked(object sender, EventArgs e)
+        private async void ScanItem_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PushModalAsync(new NavigationPage(new NewItemPage()));
+            await Navigation.PushAsync(new NavigationPage(new BarcodeScanner()));
         }
-
-        //private async void ScanItem_Clicked(object sender, EventArgs e)
-        //{
-        //    ZXingScannerPage scanPage;
-        //    scanPage = new ZXingScannerPage();
-        //    scanPage.OnScanResult += (result) => {
-        //        scanPage.IsScanning = false;
-
-        //        Device.BeginInvokeOnMainThread(() => {
-        //            Navigation.PopModalAsync();
-        //            DisplayAlert("Scanned Barcode", result.Text, "OK");
-        //        });
-        //    };
-        //    await Navigation.PushModalAsync(scanPage);
-        //}
 
         protected override void OnAppearing()
         {

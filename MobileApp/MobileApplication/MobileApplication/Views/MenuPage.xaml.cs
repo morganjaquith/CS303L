@@ -19,7 +19,7 @@ namespace MobileApplication.Views
             Greeting.Text = "Hi, " + Username[0].ToString().ToUpper() + Username.Substring(1) + "!";
             menuItems = new List<HomeMenuItem>
             {
-                new HomeMenuItem {Id = MenuItemType.Inventory, Title="Inventory" },
+                new HomeMenuItem {Id = MenuItemType.Inventory, Title="My Fridge" },
                 new HomeMenuItem {Id = MenuItemType.About, Title="About" },
                 new HomeMenuItem {Id = MenuItemType.BarcodeScanner, Title="Barcode Scanner" },
                 new HomeMenuItem {Id = MenuItemType.Logout, Title="Log Out" },

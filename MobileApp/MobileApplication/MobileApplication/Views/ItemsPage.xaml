@@ -5,7 +5,7 @@
               Title="{Binding Title}"
              x:Name="InventoryPage">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Add" Clicked="AddItem_Clicked">
+        <ToolbarItem Text="Scan" Clicked="ScanItem_Clicked">
             <ToolbarItem.Icon>
                 <OnPlatform x:TypeArguments="FileImageSource">
                     <On Platform="UWP" Value="add.png"/>
@@ -26,15 +26,24 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <StackLayout Padding="10">
-                            <Label Text="{Binding Text}" 
-                                LineBreakMode="NoWrap" 
-                                Style="{DynamicResource ListItemTextStyle}" 
-                                FontSize="18" />
-                            <Label Text="{Binding Description}" 
-                                LineBreakMode="NoWrap"
-                                Style="{DynamicResource ListItemDetailTextStyle}"
-                                FontSize="14" />
+                        <StackLayout Orientation="Horizontal">
+                            <StackLayout Orientation="Vertical">
+                                <StackLayout Orientation="Vertical">
+                                    <StackLayout Orientation="Vertical"  HorizontalOptions="Center">
+                                        <Image HorizontalOptions="Center" Source="{Binding ImageUrl}"></Image>
+                                    </StackLayout>
+                                    <StackLayout Padding="10">
+                                        <Label Text="{Binding ProductName}" 
+                                        LineBreakMode="NoWrap" 
+                                        Style="{DynamicResource ListItemTextStyle}" 
+                                        FontSize="18" />
+                                        <Label Text="{Binding Description}" 
+                                        LineBreakMode="NoWrap"
+                                        Style="{DynamicResource ListItemDetailTextStyle}"
+                                        FontSize="14" />
+                                    </StackLayout>
+                                </StackLayout>
+                            </StackLayout>
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>

@@ -8,15 +8,19 @@ namespace MobileApplication
 {
     public partial class App : Application
     {
+        Page MyFridge;
         public static string Username { get; set; }
         public static string Password { get; set; }
         public static string ScannedUPC { get; set; }
+        public static bool editingItem = false;
+        public static bool showImages = true;
 
         public App()
         {
             InitializeComponent();
 
             MainPage = new FrontPage();
+            MyFridge = new ItemsPage();
         }
 
         protected override void OnStart()

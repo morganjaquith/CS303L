@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using ZXing.Net.Mobile.Forms;
 
@@ -12,17 +12,40 @@ namespace MobileApplication.Views
         public BarcodeScanner()
         {
             InitializeComponent();
-            ButtonScanDefault.Clicked += ButtonScanDefault_Clicked;
+            OpenScannerImmediately();
         }
-        private async void ButtonScanDefault_Clicked(object sender, EventArgs e)
+
+        public async Task OpenBarcodeScanner()
         {
             scanPage = new ZXingScannerPage();
             scanPage.OnScanResult += (result) => {
-                scanPage.IsScanning = false;
+                scanPage.IsScanning = true;
 
                 Device.BeginInvokeOnMainThread(() => {
-                    Navigation.PopModalAsync();
-                    DisplayAlert("Scanned Barcode", result.Text, "OK");
+                    App.ScannedUPC = result.Text;
+                    if (new Database().GetItemFromInventory(App.Username, App.ScannedUPC) != null)
+                    {
+                        App.editingItem = true;
+                    }
+                    Navigation.PushModalAsync(new NewItemPage());
+                });
+            };
+            await Navigation.PushModalAsync(scanPage);
+        }
+
+        private async void OpenScannerImmediately()
+        {
+            scanPage = new ZXingScannerPage();
+            scanPage.OnScanResult += (result) => {
+                scanPage.IsScanning = true;
+
+                Device.BeginInvokeOnMainThread(() => {
+                    App.ScannedUPC = result.Text;
+                    if (new Database().GetItemFromInventory(App.Username, App.ScannedUPC) != null)
+                    {
+                        App.editingItem = true;
+                    }
+                    Navigation.PushModalAsync(new NewItemPage());
                 });
             };
             await Navigation.PushModalAsync(scanPage);

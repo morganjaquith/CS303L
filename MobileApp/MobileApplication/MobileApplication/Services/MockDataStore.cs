@@ -15,12 +15,12 @@ namespace MobileApplication.Services
             items = new List<Item>();
             var mockItems = new List<Item>
             {
-                new Item { UPC = Guid.NewGuid().ToString(), Text = "First item", Description="This is an item description." },
-                new Item { UPC = Guid.NewGuid().ToString(), Text = "Second item", Description="This is an item description." },
-                new Item { UPC = Guid.NewGuid().ToString(), Text = "Third item", Description="This is an item description." },
-                new Item { UPC = Guid.NewGuid().ToString(), Text = "Fourth item", Description="This is an item description." },
-                new Item { UPC = Guid.NewGuid().ToString(), Text = "Fifth item", Description="This is an item description." },
-                new Item { UPC = Guid.NewGuid().ToString(), Text = "Sixth item", Description="This is an item description." },
+                new Item { UPC = Guid.NewGuid().ToString(), ProductName = "First item", Description="This is an item description." },
+                new Item { UPC = Guid.NewGuid().ToString(), ProductName = "Second item", Description="This is an item description." },
+                new Item { UPC = Guid.NewGuid().ToString(), ProductName = "Third item", Description="This is an item description." },
+                new Item { UPC = Guid.NewGuid().ToString(), ProductName = "Fourth item", Description="This is an item description." },
+                new Item { UPC = Guid.NewGuid().ToString(), ProductName = "Fifth item", Description="This is an item description." },
+                new Item { UPC = Guid.NewGuid().ToString(), ProductName = "Sixth item", Description="This is an item description." },
             };
 
             foreach (var item in mockItems)

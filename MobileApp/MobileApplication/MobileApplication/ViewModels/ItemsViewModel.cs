@@ -18,7 +18,7 @@ namespace MobileApplication.ViewModels
 
         public ItemsViewModel()
         {
-            Title = "Inventory";
+            Title = "My Fridge";
             Items = new ObservableCollection<Item>();
             DBItems = new ObservableCollection<string>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
@@ -48,7 +48,7 @@ namespace MobileApplication.ViewModels
                 var items = await DataStore.GetItemsAsync(true);
                 for (int i = 0; i < inventory.Length; i++)
                 {
-                    Items.Add(new Item { UPC = inventory[i, 0], Text = inventory[i,1], Description = inventory[i,2], ImageUrl = inventory[i,3]});
+                    Items.Add(new Item { UPC = inventory[i, 0], ProductName = inventory[i,1], Description = inventory[i,2], ImageUrl = inventory[i,3], Quantity = inventory[i, 4]});
                 }
             }
             catch (Exception ex)

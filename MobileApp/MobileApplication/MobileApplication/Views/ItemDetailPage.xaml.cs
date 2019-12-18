@@ -5,6 +5,7 @@ using Xamarin.Forms.Xaml;
 
 using MobileApplication.Models;
 using MobileApplication.ViewModels;
+using System.Threading.Tasks;
 
 namespace MobileApplication.Views
 {
@@ -24,10 +25,9 @@ namespace MobileApplication.Views
         public ItemDetailPage()
         {
             InitializeComponent();
-
             var item = new Item
             {
-                Text = "Item 1",
+                ProductName = "Item 1",
                 Description = "This is an item description.",
             };
 
@@ -37,12 +37,20 @@ namespace MobileApplication.Views
 
         private void ButtonEditItem_Clicked(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            App.editingItem = true;
+            App.ScannedUPC = viewModel.Item.UPC;
+            Navigation.PushModalAsync(new NewItemPage());
         }
 
-        private void ButtonDeleteItem_Clicked(object sender, EventArgs e)
+        private async void ButtonDeleteItem_Clicked(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            Database db = new Database();
+            bool delete = await DisplayAlert("Delete Item", "Are you sure you want to delete this item?", "Yes", "No");
+            if (delete)
+            {
+                db.RemoveFromUserInventory(App.Username, viewModel.Item.UPC);
+                Application.Current.MainPage = new MainPage();
+            }
         }
     }
 }
